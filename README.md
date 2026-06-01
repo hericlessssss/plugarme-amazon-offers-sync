@@ -1,0 +1,1 @@
+# plugarme-amazon-offers-sync
