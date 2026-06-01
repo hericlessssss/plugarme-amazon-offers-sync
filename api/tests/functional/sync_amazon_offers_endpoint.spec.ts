@@ -1,6 +1,21 @@
 import { test } from '@japa/runner'
 
 test.group('Sync Amazon offers endpoint', () => {
+  test('rejects invalid sync identifiers before calling external APIs', async ({ client }) => {
+    const response = await client
+      .post('/sync/amazon/offers')
+      .json({
+        cliente_id: 'abc',
+        filial_id: -1,
+      })
+      .send()
+
+    response.assertStatus(422)
+    response.assertBodyContains({
+      error: 'Invalid sync identifiers',
+    })
+  })
+
   test('runs the sync flow through the HTTP endpoint', async ({ assert, client }) => {
     const originalFetch = globalThis.fetch
     const requests: Array<{ url: string; init?: RequestInit }> = []

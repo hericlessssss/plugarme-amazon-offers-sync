@@ -17,6 +17,33 @@ export function normalizeBaseUrl(baseUrl: string) {
   return baseUrl.replace(/\/+$/, '')
 }
 
+export function withTimeout(fetcher: Fetcher, timeoutMs: number): Fetcher {
+  return async (input, init) => {
+    const controller = new AbortController()
+    const timeout = setTimeout(() => controller.abort(), timeoutMs)
+
+    try {
+      return await fetcher(input, {
+        ...init,
+        signal: init?.signal ?? controller.signal,
+      })
+    } catch (error) {
+      if (error instanceof Error && error.name === 'AbortError') {
+        throw new HttpClientError(
+          `HTTP request timed out after ${timeoutMs}ms`,
+          0,
+          init?.method ?? 'GET',
+          String(input),
+          null
+        )
+      }
+      throw error
+    } finally {
+      clearTimeout(timeout)
+    }
+  }
+}
+
 export async function parseJsonResponse(response: Response) {
   const text = await response.text()
   if (!text) {

@@ -59,6 +59,7 @@ interface SyncAmazonOffersServiceConfig {
   delay?: (ms: number) => Promise<void>
   retry?: Partial<RetryConfig>
   logger?: SyncLogger
+  maxProductsPerSync?: number
 }
 
 const DEFAULT_RETRY: RetryConfig = {
@@ -86,6 +87,8 @@ const SENSITIVE_KEYS = new Set([
   'x-amz-access-token',
 ])
 
+const MAX_LOG_STRING_LENGTH = 1000
+
 export class SyncAmazonOffersService {
   readonly #plugarmeClient: PlugarmeClientContract
   readonly #amazonAuthClient: AmazonAuthClientContract
@@ -94,6 +97,7 @@ export class SyncAmazonOffersService {
   readonly #delay: (ms: number) => Promise<void>
   readonly #retry: RetryConfig
   readonly #logger: SyncLogger
+  readonly #maxProductsPerSync: number
 
   constructor(config: SyncAmazonOffersServiceConfig) {
     this.#plugarmeClient = config.plugarmeClient
@@ -103,6 +107,7 @@ export class SyncAmazonOffersService {
     this.#delay = config.delay ?? ((ms) => new Promise((resolve) => setTimeout(resolve, ms)))
     this.#retry = { ...DEFAULT_RETRY, ...config.retry }
     this.#logger = config.logger ?? noopLogger
+    this.#maxProductsPerSync = config.maxProductsPerSync ?? 1000
   }
 
   async sync(input: SyncInput): Promise<SyncAmazonOffersResult> {
@@ -151,6 +156,22 @@ export class SyncAmazonOffersService {
       },
       'Fetched products from Plugar.me'
     )
+
+    if (products.length > this.#maxProductsPerSync) {
+      this.#logger.error(
+        {
+          clienteId: input.clienteId,
+          filialId: input.filialId,
+          productsCount: products.length,
+          maxProductsPerSync: this.#maxProductsPerSync,
+        },
+        'Aborting offer synchronization because product count exceeds configured safety limit'
+      )
+
+      throw new Error(
+        `Product count ${products.length} exceeds configured safety limit ${this.#maxProductsPerSync}`
+      )
+    }
 
     let accessToken = credentials.access_token
 
@@ -438,6 +459,10 @@ export class SyncAmazonOffersService {
           SENSITIVE_KEYS.has(key) ? '[REDACTED]' : this.#sanitize(item),
         ])
       )
+    }
+
+    if (typeof value === 'string' && value.length > MAX_LOG_STRING_LENGTH) {
+      return `${value.slice(0, MAX_LOG_STRING_LENGTH)}...[truncated]`
     }
 
     return value

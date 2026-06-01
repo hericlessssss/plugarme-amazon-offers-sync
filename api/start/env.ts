@@ -32,4 +32,7 @@ export default await Env.create(new URL('../', import.meta.url), {
   // Sync defaults
   CLIENTE_ID: Env.schema.number(),
   FILIAL_ID: Env.schema.number(),
+  SYNC_API_TOKEN: Env.schema.string.optional(),
+  HTTP_TIMEOUT_MS: Env.schema.number(),
+  MAX_PRODUCTS_PER_SYNC: Env.schema.number(),
 })

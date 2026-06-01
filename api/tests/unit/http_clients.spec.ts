@@ -1,7 +1,7 @@
 import { test } from '@japa/runner'
 import { AmazonAuthClient } from '#clients/amazon_auth_client'
 import { AmazonListingsClient } from '#clients/amazon_listings_client'
-import { HttpClientError } from '#clients/http'
+import { HttpClientError, withTimeout } from '#clients/http'
 import { PlugarmeClient } from '#clients/plugarme_client'
 import { buildAmazonOfferPatchPayload } from '#services/offer_mapper'
 
@@ -167,6 +167,27 @@ test.group('HTTP clients', () => {
       assert.instanceOf(error, HttpClientError)
       assert.equal((error as HttpClientError).status, 401)
       assert.notInclude((error as HttpClientError).message, 'expired-token')
+    }
+  })
+
+  test('converts aborted HTTP calls into timeout errors', async ({ assert }) => {
+    const fetcher = withTimeout(
+      (_input, init) =>
+        new Promise<Response>((_resolve, reject) => {
+          init?.signal?.addEventListener('abort', () => {
+            reject(new DOMException('The operation was aborted.', 'AbortError'))
+          })
+        }),
+      1
+    )
+
+    try {
+      await fetcher('http://localhost:3333/slow', { method: 'GET' })
+      assert.fail('Expected request to time out')
+    } catch (error) {
+      assert.instanceOf(error, HttpClientError)
+      assert.equal((error as HttpClientError).status, 0)
+      assert.include((error as HttpClientError).message, 'timed out')
     }
   })
 })

@@ -5,7 +5,7 @@ const bodyParserConfig = defineConfig({
    * Parse request bodies for these HTTP methods.
    * Keep this aligned with methods that receive payloads in your routes.
    */
-  allowedMethods: ['POST', 'PUT', 'PATCH', 'DELETE'],
+  allowedMethods: ['POST'],
 
   /**
    * Config for the "application/x-www-form-urlencoded"
@@ -21,6 +21,7 @@ const bodyParserConfig = defineConfig({
      * Content types handled by the form parser.
      */
     types: ['application/x-www-form-urlencoded'],
+    limit: '10kb',
   },
 
   /**
@@ -41,6 +42,7 @@ const bodyParserConfig = defineConfig({
       'application/vnd.api+json',
       'application/csp-report',
     ],
+    limit: '10kb',
   },
 
   /**
@@ -51,7 +53,7 @@ const bodyParserConfig = defineConfig({
     /**
      * Automatically process uploaded files into the system tmp directory.
      */
-    autoProcess: true,
+    autoProcess: false,
 
     /**
      * Normalize empty string values to null.
@@ -66,12 +68,12 @@ const bodyParserConfig = defineConfig({
     /**
      * Maximum accepted payload size for multipart requests.
      */
-    limit: '20mb',
+    limit: '1kb',
 
     /**
      * Content types handled by the multipart parser.
      */
-    types: ['multipart/form-data'],
+    types: [],
   },
 })
 

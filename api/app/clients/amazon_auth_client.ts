@@ -1,9 +1,10 @@
 import type { Fetcher } from '#clients/http'
-import { ensureSuccess, normalizeBaseUrl } from '#clients/http'
+import { ensureSuccess, normalizeBaseUrl, withTimeout } from '#clients/http'
 import type { AmazonAccessToken, AmazonRefreshTokenInput } from '#types/amazon'
 
 interface AmazonAuthClientConfig {
   baseUrl: string
+  timeoutMs?: number
   fetcher?: Fetcher
 }
 
@@ -13,7 +14,7 @@ export class AmazonAuthClient {
 
   constructor(config: AmazonAuthClientConfig) {
     this.#baseUrl = normalizeBaseUrl(config.baseUrl)
-    this.#fetcher = config.fetcher ?? fetch
+    this.#fetcher = withTimeout(config.fetcher ?? fetch, config.timeoutMs ?? 5000)
   }
 
   async refreshAccessToken(input: AmazonRefreshTokenInput): Promise<AmazonAccessToken> {

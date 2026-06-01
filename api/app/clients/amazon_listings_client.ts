@@ -1,9 +1,10 @@
 import type { Fetcher } from '#clients/http'
-import { ensureSuccess, normalizeBaseUrl } from '#clients/http'
+import { ensureSuccess, normalizeBaseUrl, withTimeout } from '#clients/http'
 import type { AmazonListingPatchResult, AmazonListingsPatchPayload } from '#types/amazon'
 
 interface AmazonListingsClientConfig {
   baseUrl: string
+  timeoutMs?: number
   fetcher?: Fetcher
 }
 
@@ -21,7 +22,7 @@ export class AmazonListingsClient {
 
   constructor(config: AmazonListingsClientConfig) {
     this.#baseUrl = normalizeBaseUrl(config.baseUrl)
-    this.#fetcher = config.fetcher ?? fetch
+    this.#fetcher = withTimeout(config.fetcher ?? fetch, config.timeoutMs ?? 5000)
   }
 
   async patchListingOffer(input: PatchListingOfferInput): Promise<AmazonListingPatchResult> {

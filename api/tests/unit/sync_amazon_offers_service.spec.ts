@@ -327,4 +327,48 @@ test.group('SyncAmazonOffersService', () => {
     assert.notInclude(serializedLogs, 'leaked-client-secret')
     assert.include(serializedLogs, '[REDACTED]')
   })
+
+  test('aborts before publishing when product count exceeds the safety limit', async ({
+    assert,
+  }) => {
+    const { entries, logger } = createMemoryLogger()
+    let publishCalls = 0
+    const service = new SyncAmazonOffersService({
+      plugarmeClient: {
+        getAmazonCredentials: async () => ({
+          ...credentials,
+          access_token_expires_at: '2026-06-01T11:00:00.000Z',
+        }),
+        getProducts: async () => [product({ erp_id: 'SKU-1' }), product({ erp_id: 'SKU-2' })],
+      },
+      amazonAuthClient: {
+        refreshAccessToken: async () => {
+          throw new Error('Should not refresh before product limit validation')
+        },
+      },
+      amazonListingsClient: {
+        patchListingOffer: async (input) => {
+          publishCalls += 1
+          return accepted(input.sku)
+        },
+      },
+      logger,
+      maxProductsPerSync: 1,
+      now: () => new Date('2026-06-01T10:00:00.000Z'),
+    })
+
+    await assert.rejects(
+      () => service.sync({ clienteId: 1, filialId: 6 }),
+      /exceeds configured safety limit/
+    )
+    assert.equal(publishCalls, 0)
+    assert.isTrue(
+      entries.some(
+        (entry) =>
+          entry.level === 'error' &&
+          entry.message ===
+            'Aborting offer synchronization because product count exceeds configured safety limit'
+      )
+    )
+  })
 })

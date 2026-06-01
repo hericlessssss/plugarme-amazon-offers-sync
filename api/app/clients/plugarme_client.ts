@@ -1,11 +1,12 @@
 import type { Fetcher } from '#clients/http'
-import { ensureSuccess, normalizeBaseUrl } from '#clients/http'
+import { ensureSuccess, normalizeBaseUrl, withTimeout } from '#clients/http'
 import type { AmazonCredentials } from '#types/amazon'
 import type { PlugarmeProduct } from '#types/plugarme'
 
 interface PlugarmeClientConfig {
   baseUrl: string
   apiToken: string
+  timeoutMs?: number
   fetcher?: Fetcher
 }
 
@@ -26,7 +27,7 @@ export class PlugarmeClient {
   constructor(config: PlugarmeClientConfig) {
     this.#baseUrl = normalizeBaseUrl(config.baseUrl)
     this.#apiToken = config.apiToken
-    this.#fetcher = config.fetcher ?? fetch
+    this.#fetcher = withTimeout(config.fetcher ?? fetch, config.timeoutMs ?? 5000)
   }
 
   async getProducts(input: GetProductsInput): Promise<PlugarmeProduct[]> {

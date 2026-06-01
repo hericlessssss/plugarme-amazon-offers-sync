@@ -23,13 +23,13 @@ const corsConfig = defineConfig({
   /**
    * HTTP methods accepted for cross-origin requests.
    */
-  methods: ['GET', 'HEAD', 'POST', 'PUT', 'PATCH', 'DELETE'],
+  methods: ['GET', 'HEAD', 'POST'],
 
   /**
    * Reflect request headers by default. Use a string array to restrict
    * allowed headers.
    */
-  headers: true,
+  headers: ['Content-Type', 'Authorization'],
 
   /**
    * Response headers exposed to the browser.
@@ -39,7 +39,7 @@ const corsConfig = defineConfig({
   /**
    * Allow cookies/authorization headers on cross-origin requests.
    */
-  credentials: true,
+  credentials: false,
 
   /**
    * Cache CORS preflight response for N seconds.

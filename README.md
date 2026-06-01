@@ -44,6 +44,8 @@ PLUGARME_API_TOKEN=plugarme-test-token
 AMAZON_SP_API_BASE_URL=http://localhost:3333/amazon
 CLIENTE_ID=1
 FILIAL_ID=6
+HTTP_TIMEOUT_MS=5000
+MAX_PRODUCTS_PER_SYNC=1000
 ```
 
 A API Adonis roda na porta `3334` para nao conflitar com a mock API, que roda na porta `3333`.
@@ -102,6 +104,12 @@ Tambem e possivel sobrescrever os IDs configurados:
   "cliente_id": 1,
   "filial_id": 6
 }
+```
+
+Se `SYNC_API_TOKEN` estiver configurado no `.env`, a rota exige:
+
+```http
+Authorization: Bearer <SYNC_API_TOKEN>
 ```
 
 ## Resultado esperado
@@ -175,6 +183,9 @@ Cobertura atual:
 - Isolamento de falha por SKU.
 - Logs tecnicos do fluxo sem vazamento de segredos.
 - Teste funcional da rota `POST /sync/amazon/offers`.
+- Timeout em chamadas HTTP externas.
+- Limite de produtos por execucao para evitar processamento acidentalmente caro.
+- Rejeicao de identificadores invalidos antes de chamar APIs externas.
 
 ## Observabilidade e logs
 
@@ -268,6 +279,18 @@ Invoke-WebRequest -Uri http://localhost:3333/admin/expire-token -Method POST
 - Segredos reais nao devem ser versionados.
 - `.env` fica fora do Git; apenas `.env.example` e versionado.
 - O payload enviado para a Amazon nao inclui custo do produto.
+- A rota de sincronizacao pode ser protegida com `SYNC_API_TOKEN`.
+- `cliente_id` e `filial_id` sao validados como inteiros positivos.
+- O body parser aceita apenas `POST`, limita JSON/form a `10kb` e nao processa multipart.
+- CORS fica restrito a `GET/POST`, sem credenciais cross-origin.
+
+## Controles de custo e recursos
+
+- As chamadas externas possuem timeout configuravel por `HTTP_TIMEOUT_MS`.
+- A sincronizacao aborta se a origem retornar mais produtos que `MAX_PRODUCTS_PER_SYNC`.
+- O processamento e sequencial, o que reduz risco de estouro de rate limit e evita rajadas de chamadas para a Amazon.
+- `429` usa retry simples com backoff e limite de tentativas.
+- Logs truncam strings longas de erro para evitar explosao de volume em respostas externas inesperadas.
 
 ## Como adaptar para a SP-API real
 
