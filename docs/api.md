@@ -40,6 +40,108 @@ Referência visual local:
 GET /docs
 ```
 
+## Ambiente Técnico Validado
+
+Validação final executada em `1 de junho de 2026`.
+
+| Item | Versão/resultado |
+| --- | --- |
+| Node.js | `v24.14.0` |
+| npm | `11.9.0` |
+| TypeScript | `~6.0.3` |
+| AdonisJS core | `^7.3.3` |
+| AdonisJS assembler | `^8.4.0` |
+| Japa runner | `^5.3.0` |
+| Cobertura | `c8` |
+
+Scripts principais da API:
+
+```json
+{
+  "dev": "node ace serve --hmr",
+  "test": "node ace test",
+  "test:coverage": "c8 --reporter=text --reporter=html node ace test",
+  "lint": "eslint .",
+  "typecheck": "tsc --noEmit",
+  "build": "node ace build"
+}
+```
+
+## Evidência De Validação Final
+
+Comandos executados como validação final:
+
+| Comando | Resultado |
+| --- | --- |
+| `npm run lint` | Aprovado |
+| `npm run typecheck` | Aprovado |
+| `npm test` | Aprovado, `23 passed (23)` |
+| `npm run test:coverage` | Aprovado, `23 passed (23)` |
+| `npm run build` | Aprovado |
+| `npm audit --omit=dev` | Aprovado, `0 vulnerabilities` |
+| `npm audit` | Aprovado, `0 vulnerabilities` |
+
+Resultado de cobertura gerado por `c8`:
+
+| Métrica | Percentual |
+| --- | --- |
+| Statements | `96.29%` |
+| Branches | `86.80%` |
+| Functions | `92.45%` |
+| Lines | `96.29%` |
+
+Cobertura por áreas críticas:
+
+| Área | Statements | Branches | Functions | Lines |
+| --- | ---: | ---: | ---: | ---: |
+| `app/controllers` | `100%` | `100%` | `100%` | `100%` |
+| `app/clients` | `97.96%` | `84.84%` | `100%` | `97.96%` |
+| `app/services` | `94.65%` | `85.33%` | `100%` | `94.65%` |
+
+Testes executados:
+
+| Suíte | Cenário |
+| --- | --- |
+| Unit | `PlugarmeClient` busca produtos com autenticação e filtros |
+| Unit | `PlugarmeClient` busca credenciais Amazon sem expor segredos |
+| Unit | `AmazonAuthClient` renova access token com body form-url-encoded |
+| Unit | `AmazonListingsClient` envia patch de oferta |
+| Unit | Erro HTTP externo vira `HttpClientError` com status e mensagem sanitizada |
+| Unit | Timeout HTTP gera erro controlado |
+| Unit | Produto ativo vira candidato publicável Amazon |
+| Unit | Produto inativo é ignorado |
+| Unit | Produto sem preço válido é ignorado |
+| Unit | Produto com preço não positivo é ignorado |
+| Unit | Produto sem estoque da filial é ignorado |
+| Unit | Estoque `0` é aceito como publicável |
+| Unit | Payload Amazon não inclui custo do produto |
+| Unit | Token expirado é renovado antes da publicação |
+| Unit | Produtos inválidos são ignorados sem parar a sincronização |
+| Unit | `401` da Amazon gera refresh e retry uma vez |
+| Unit | `429` da Amazon gera retry com backoff |
+| Unit | Falha em um SKU não para os demais |
+| Unit | Logs técnicos não vazam segredos Amazon |
+| Unit | Sincronização aborta quando excede `MAX_PRODUCTS_PER_SYNC` |
+| Functional | Requisição sem `Authorization` é rejeitada quando `SYNC_API_TOKEN` está configurado |
+| Functional | Identificadores inválidos retornam `422` antes de chamadas externas |
+| Functional | Endpoint HTTP executa o fluxo completo da sincronização |
+
+Validação ponta a ponta com mock API real:
+
+| Verificação | Resultado |
+| --- | --- |
+| `POST http://localhost:3333/admin/reset` | `200` |
+| `GET http://localhost:3334/docs` | `200` |
+| `GET http://localhost:3334/openapi.json` | `200` |
+| `POST http://localhost:3334/sync/amazon/offers` | `200` |
+| Total de produtos no cenário inicial | `2` |
+| Publicados | `1` |
+| Ignorados | `1` |
+| Falhas | `0` |
+| Primeiro SKU publicado | `PS5-CONTROLE` |
+| Primeiro motivo de ignore | `missing_valid_price` |
+| IDs inválidos | `422` |
+
 ## Autenticação Da Rota De Sincronização
 
 Por padrão, a rota pode ser chamada sem autenticação local. Para proteger o
@@ -337,6 +439,31 @@ Os logs foram pensados para responder rapidamente:
 - Houve refresh de token?
 - Houve rate limit e retry?
 
+Mensagens textuais registradas pela aplicação:
+
+| Nível | Mensagem de log | Quando aparece |
+| --- | --- | --- |
+| `info` | `Starting Plugar.me to Amazon offer synchronization` | Início do fluxo de sincronização |
+| `debug` | `Fetching Amazon credentials from Plugar.me` | Antes de buscar credenciais Amazon na Plugar.me mock |
+| `debug` | `Fetched Amazon credentials metadata` | Após buscar metadados das credenciais, sem logar tokens/secrets |
+| `debug` | `Fetching products from Plugar.me` | Antes de buscar produtos, preços e estoques |
+| `info` | `Fetched products from Plugar.me` | Após retorno da lista de produtos |
+| `error` | `Aborting offer synchronization because product count exceeds configured safety limit` | Quando `products.length` excede `MAX_PRODUCTS_PER_SYNC` |
+| `warn` | `Amazon access token is expired before publishing` | Quando o token inicial já está expirado |
+| `debug` | `Amazon access token is still valid before publishing` | Quando o token inicial ainda é válido |
+| `warn` | `Refreshing Amazon access token` | Antes de chamar o endpoint de refresh |
+| `info` | `Amazon access token refreshed` | Após refresh bem-sucedido |
+| `error` | `Failed to refresh Amazon access token` | Quando a renovação do token falha |
+| `warn` | `Skipping product during offer synchronization` | Quando um produto é ignorado por regra de negócio |
+| `debug` | `Publishing Amazon offer` | Antes de enviar o `PATCH` para um SKU |
+| `info` | `Amazon offer published` | Após publicação aceita pela Amazon mock |
+| `warn` | `Amazon rejected offer publication because the access token is invalid or expired` | Quando a Amazon mock retorna `401` no patch da oferta |
+| `warn` | `Amazon rate limit reached while publishing offer; retrying after backoff` | Quando a Amazon mock retorna `429` e ainda há retry disponível |
+| `error` | `Failed to publish Amazon offer` | Quando um SKU falha definitivamente |
+| `info` | `Finished Plugar.me to Amazon offer synchronization` | Fim do fluxo, com resumo consolidado |
+| `warn` | `Rejected unauthorized offer sync request` | Quando `SYNC_API_TOKEN` está configurado e o header é ausente/incorreto |
+| `warn` | `Rejected offer sync request with invalid identifiers` | Quando `cliente_id` ou `filial_id` é inválido |
+
 Dados sensíveis são mascarados antes de ir para log:
 
 - `access_token`
@@ -345,6 +472,36 @@ Dados sensíveis são mascarados antes de ir para log:
 - `client_secret`
 - `Authorization`
 - `x-amz-access-token`
+
+Formato esperado dos logs de erro HTTP externo:
+
+```json
+{
+  "error": {
+    "name": "HttpClientError",
+    "message": "Amazon listings request failed",
+    "status": 429,
+    "method": "PATCH",
+    "url": "http://localhost:3333/amazon/listings/2021-08-01/items/A1PLUGARMESELLERBR/PS5-CONTROLE",
+    "responseBody": {
+      "error": "rate_limit"
+    }
+  }
+}
+```
+
+Quando um campo sensível aparece em algum objeto logado, o valor vira:
+
+```json
+{
+  "access_token": "[REDACTED]",
+  "refresh_token": "[REDACTED]",
+  "lwa_client_secret": "[REDACTED]"
+}
+```
+
+Strings longas de erro são truncadas após `1000` caracteres para evitar explosão
+de volume em log.
 
 ## Limites Operacionais
 
@@ -355,6 +512,40 @@ Dados sensíveis são mascarados antes de ir para log:
 | Body limitado | `10kb` | Reduzir superfície para abuso da rota |
 | Processamento sequencial | Código da sync | Reduzir rajadas contra a Amazon mock |
 | Retry limitado | Código dos clients/serviço | Evitar loop infinito em `401` ou `429` |
+
+## Preocupações De Segurança Tratadas
+
+| Ponto | Tratamento aplicado |
+| --- | --- |
+| Segredos em log | Tokens, secrets e headers sensíveis são mascarados com `[REDACTED]` |
+| Vazamento de custo | O custo do produto vindo do estoque não entra no payload Amazon |
+| Disparo indevido da sync | `SYNC_API_TOKEN` pode proteger a rota com Bearer token |
+| Entrada inválida | `cliente_id` e `filial_id` são aceitos apenas como inteiros positivos |
+| Body excessivo | Body parser limitado a `10kb` para JSON/form |
+| Upload desnecessário | Multipart desabilitado |
+| CORS amplo demais | Métodos restritos a `GET` e `POST`, sem credenciais cross-origin |
+| Chamadas externas presas | Timeout configurável por `HTTP_TIMEOUT_MS` |
+| Execução grande acidental | Limite por `MAX_PRODUCTS_PER_SYNC` |
+| Rate limit | Retry limitado com backoff |
+| Falha parcial | Erro em um SKU não interrompe a execução dos demais |
+
+## Pontos De Atenção Para Produção Real
+
+Estes pontos não bloqueiam o desafio porque a tarefa usa mock API e dispensa
+banco de dados, mas seriam importantes numa integração real:
+
+- Persistir tokens renovados em armazenamento seguro se a aplicação rodar de forma contínua.
+- Buscar segredos em cofre, Secret Manager ou variável protegida do ambiente, não em `.env` local.
+- Adicionar assinatura AWS SigV4 para chamada real da Selling Partner API.
+- Respeitar headers reais de rate limit da Amazon em vez de apenas backoff fixo.
+- Adicionar idempotência/rastreamento por execução se múltiplos disparos puderem ocorrer ao mesmo tempo.
+- Adicionar fila ou job runner para sincronizações grandes, evitando request HTTP longo.
+- Adicionar métricas além de logs, como quantidade de SKUs publicados, falhos e ignorados por execução.
+- Adicionar alertas para falhas recorrentes de token, `429`, `5xx` externo e excesso de produtos.
+- Definir política de retenção de logs para evitar armazenamento desnecessário de dados operacionais.
+- Rever `CORS_ORIGIN` por ambiente antes de expor a API fora do localhost.
+- Versionar contrato de API se novos endpoints ou formatos de resposta forem adicionados.
+- Adicionar autenticação mais robusta se o endpoint for exposto publicamente.
 
 ## Checklist Para Validar A API
 

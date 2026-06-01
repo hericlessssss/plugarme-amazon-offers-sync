@@ -173,6 +173,12 @@ cd api
 npm test
 ```
 
+Rodar a suíte com cobertura:
+
+```powershell
+npm run test:coverage
+```
+
 Validações adicionais:
 
 ```powershell

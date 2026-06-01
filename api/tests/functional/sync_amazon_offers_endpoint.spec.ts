@@ -1,6 +1,31 @@
 import { test } from '@japa/runner'
+import env from '#start/env'
 
 test.group('Sync Amazon offers endpoint', () => {
+  test('rejects unauthorized sync requests when SYNC_API_TOKEN is configured', async ({
+    client,
+  }) => {
+    const originalEnvGet = env.get.bind(env)
+    env.get = ((key: string) => {
+      if (key === 'SYNC_API_TOKEN') {
+        return 'local-sync-token'
+      }
+
+      return originalEnvGet(key as never)
+    }) as typeof env.get
+
+    try {
+      const response = await client.post('/sync/amazon/offers').json({}).send()
+
+      response.assertStatus(401)
+      response.assertBodyContains({
+        error: 'Unauthorized',
+      })
+    } finally {
+      env.get = originalEnvGet
+    }
+  })
+
   test('rejects invalid sync identifiers before calling external APIs', async ({ client }) => {
     const response = await client
       .post('/sync/amazon/offers')
