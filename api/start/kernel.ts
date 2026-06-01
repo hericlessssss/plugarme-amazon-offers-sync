@@ -1,7 +1,5 @@
 /*
-|--------------------------------------------------------------------------
 | HTTP kernel file
-|--------------------------------------------------------------------------
 |
 | The HTTP kernel file is used to register the middleware with the server
 | or the router.

@@ -1,7 +1,5 @@
 /*
-|--------------------------------------------------------------------------
 | HTTP server entrypoint
-|--------------------------------------------------------------------------
 |
 | The "server.ts" file is the entrypoint for starting the AdonisJS HTTP
 | server. Either you can run this file directly or use the "serve"

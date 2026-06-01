@@ -1,7 +1,5 @@
 /*
-|--------------------------------------------------------------------------
 | Validator file
-|--------------------------------------------------------------------------
 |
 | The validator file is used for configuring global transforms for VineJS.
 | The transform below converts all VineJS date outputs from JavaScript
