@@ -9,6 +9,12 @@ import type {
 } from '#types/amazon'
 import type { PlugarmeProduct } from '#types/plugarme'
 
+type LogEntry = {
+  level: 'debug' | 'info' | 'warn' | 'error'
+  context: Record<string, unknown>
+  message: string
+}
+
 const credentials: AmazonCredentials = {
   cliente_id: 1,
   filial_id: 6,
@@ -40,6 +46,28 @@ function accepted(sku: string): AmazonListingPatchResult {
     status: 'ACCEPTED',
     submissionId: `SUB-${sku}`,
     issues: [],
+  }
+}
+
+function createMemoryLogger() {
+  const entries: LogEntry[] = []
+
+  return {
+    entries,
+    logger: {
+      debug: (context: Record<string, unknown>, message: string) => {
+        entries.push({ level: 'debug', context, message })
+      },
+      info: (context: Record<string, unknown>, message: string) => {
+        entries.push({ level: 'info', context, message })
+      },
+      warn: (context: Record<string, unknown>, message: string) => {
+        entries.push({ level: 'warn', context, message })
+      },
+      error: (context: Record<string, unknown>, message: string) => {
+        entries.push({ level: 'error', context, message })
+      },
+    },
   }
 }
 
@@ -245,5 +273,58 @@ test.group('SyncAmazonOffersService', () => {
     })
     assert.equal(result.failed[0].sku, 'FAIL-SKU')
     assert.equal(result.published[0].sku, 'PS5-CONTROLE')
+  })
+
+  test('writes troubleshooting logs without exposing Amazon secrets', async ({ assert }) => {
+    const { entries, logger } = createMemoryLogger()
+    const service = new SyncAmazonOffersService({
+      plugarmeClient: {
+        getAmazonCredentials: async () => credentials,
+        getProducts: async () => [product()],
+      },
+      amazonAuthClient: {
+        refreshAccessToken: async () => ({
+          accessToken: 'fresh-secret-token',
+          tokenType: 'bearer',
+          expiresIn: 3600,
+        }),
+      },
+      amazonListingsClient: {
+        patchListingOffer: async () => {
+          throw new HttpClientError('HTTP 422 returned by PATCH listing', 422, 'PATCH', 'url', {
+            access_token: 'leaked-access-token',
+            refresh_token: 'leaked-refresh-token',
+            client_secret: 'leaked-client-secret',
+            detail: 'Invalid offer in mock',
+          })
+        },
+      },
+      logger,
+      now: () => new Date('2026-06-01T10:00:00.000Z'),
+    })
+
+    const result = await service.sync({ clienteId: 1, filialId: 6 })
+    const serializedLogs = JSON.stringify(entries)
+
+    assert.equal(result.summary.failed, 1)
+    assert.isAtLeast(entries.length, 7)
+    assert.isTrue(
+      entries.some(
+        (entry) => entry.message === 'Starting Plugar.me to Amazon offer synchronization'
+      )
+    )
+    assert.isTrue(entries.some((entry) => entry.message === 'Amazon access token refreshed'))
+    assert.isTrue(entries.some((entry) => entry.message === 'Failed to publish Amazon offer'))
+    assert.include(serializedLogs, 'PS5-CONTROLE')
+    assert.include(serializedLogs, '422')
+    assert.include(serializedLogs, 'Invalid offer in mock')
+    assert.notInclude(serializedLogs, credentials.access_token)
+    assert.notInclude(serializedLogs, credentials.refresh_token)
+    assert.notInclude(serializedLogs, credentials.lwa_client_secret)
+    assert.notInclude(serializedLogs, 'fresh-secret-token')
+    assert.notInclude(serializedLogs, 'leaked-access-token')
+    assert.notInclude(serializedLogs, 'leaked-refresh-token')
+    assert.notInclude(serializedLogs, 'leaked-client-secret')
+    assert.include(serializedLogs, '[REDACTED]')
   })
 })

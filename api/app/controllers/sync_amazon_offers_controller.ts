@@ -6,7 +6,7 @@ import env from '#start/env'
 import type { HttpContext } from '@adonisjs/core/http'
 
 export default class SyncAmazonOffersController {
-  async handle({ request }: HttpContext) {
+  async handle({ logger, request }: HttpContext) {
     const clienteId = Number(request.input('cliente_id', env.get('CLIENTE_ID')))
     const filialId = Number(request.input('filial_id', env.get('FILIAL_ID')))
 
@@ -21,6 +21,7 @@ export default class SyncAmazonOffersController {
       amazonListingsClient: new AmazonListingsClient({
         baseUrl: env.get('AMAZON_SP_API_BASE_URL'),
       }),
+      logger,
     })
 
     return service.sync({ clienteId, filialId })
