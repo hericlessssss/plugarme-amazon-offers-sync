@@ -1,10 +1,4 @@
 # Documentação da API
-
-Este documento descreve o contrato HTTP da aplicação `plugarme-amazon-offers-sync`.
-Ele complementa o `README.md`: o README explica como instalar e executar; este
-arquivo explica como consumir a API, quais respostas esperar e como investigar
-falhas.
-
 ## Visão Geral
 
 A API expõe uma operação principal: disparar a sincronização de ofertas Amazon a
@@ -546,18 +540,3 @@ banco de dados, mas seriam importantes numa integração real:
 - Rever `CORS_ORIGIN` por ambiente antes de expor a API fora do localhost.
 - Versionar contrato de API se novos endpoints ou formatos de resposta forem adicionados.
 - Adicionar autenticação mais robusta se o endpoint for exposto publicamente.
-
-## Checklist Para Validar A API
-
-Antes de considerar a API pronta para entrega:
-
-- `GET /` responde `200`.
-- `GET /docs` abre no navegador.
-- `GET /openapi.json` retorna JSON válido.
-- `POST /sync/amazon/offers` publica `PS5-CONTROLE` no estado inicial da mock.
-- Produto sem preço válido aparece em `skipped`.
-- Estoque `0` é enviado como quantidade válida.
-- `401` da Amazon mock gera refresh e retry.
-- `429` da Amazon mock gera retry com backoff.
-- `cliente_id` e `filial_id` inválidos retornam `422`.
-- Logs não exibem tokens nem secrets.
