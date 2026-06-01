@@ -1,6 +1,6 @@
 # plugarme-amazon-offers-sync
 
-Aplicacao AdonisJS + TypeScript para sincronizar preco e estoque de produtos da Plugar.me com ofertas existentes na Amazon Brasil, usando as APIs mock fornecidas no desafio tecnico.
+Aplicação AdonisJS + TypeScript para sincronizar preço e estoque de produtos da Plugar.me com ofertas existentes na Amazon Brasil, usando as APIs mock fornecidas no desafio técnico.
 
 ## Stack
 
@@ -8,24 +8,24 @@ Aplicacao AdonisJS + TypeScript para sincronizar preco e estoque de produtos da 
 - TypeScript
 - AdonisJS
 - Japa para testes
-- Mock API local incluida em `mock-api/`
+- Mock API local incluída em `mock-api/`
 
 ## Estrutura
 
 ```text
 api/
   app/
-    clients/      # Integracoes HTTP com Plugar.me e Amazon mock
-    controllers/  # Entrada HTTP da sincronizacao
-    services/     # Regras de negocio e orquestracao
+    clients/      # Integrações HTTP com Plugar.me e Amazon mock
+    controllers/  # Entrada HTTP da sincronização
+    services/     # Regras de negócio e orquestração
     types/        # Contratos TypeScript
-  tests/unit/     # Testes unitarios
+  tests/unit/     # Testes unitários
 
 mock-api/         # API externa simulada do desafio
 docs/             # Material auxiliar de onboarding
 ```
 
-## Variaveis de ambiente
+## Variáveis de ambiente
 
 Crie o `.env` da API a partir do exemplo:
 
@@ -48,25 +48,25 @@ HTTP_TIMEOUT_MS=5000
 MAX_PRODUCTS_PER_SYNC=1000
 ```
 
-A API Adonis roda na porta `3334` para nao conflitar com a mock API, que roda na porta `3333`.
+A API Adonis roda na porta `3334` para não conflitar com a mock API, que roda na porta `3333`.
 
-## Instalacao
+## Instalação
 
-Instale as dependencias da mock API:
+Instale as dependências da mock API:
 
 ```powershell
 cd mock-api
 npm install
 ```
 
-Instale as dependencias da aplicacao:
+Instale as dependências da aplicação:
 
 ```powershell
 cd ..\api
 npm install
 ```
 
-## Execucao
+## Execução
 
 Terminal 1, mock API:
 
@@ -75,20 +75,27 @@ cd mock-api
 npm start
 ```
 
-Terminal 2, aplicacao AdonisJS:
+Terminal 2, aplicação AdonisJS:
 
 ```powershell
 cd api
 npm run dev
 ```
 
-Health da aplicacao:
+Health da aplicação:
 
 ```http
 GET http://localhost:3334/
 ```
 
-Disparar sincronizacao:
+Documentação local da API:
+
+```http
+GET http://localhost:3334/docs
+GET http://localhost:3334/openapi.json
+```
+
+Disparar sincronização:
 
 ```http
 POST http://localhost:3334/sync/amazon/offers
@@ -97,7 +104,7 @@ Content-Type: application/json
 {}
 ```
 
-Tambem e possivel sobrescrever os IDs configurados:
+Também é possível sobrescrever os IDs configurados:
 
 ```json
 {
@@ -116,9 +123,9 @@ Authorization: Bearer <SYNC_API_TOKEN>
 
 Na carga inicial da mock API:
 
-- `PS5-CONTROLE` deve ser publicado com preco `599` e estoque `100`.
-- `KIT-576001` deve ser ignorado porque nao possui preco valido.
-- O token Amazon inicial deve ser renovado antes da publicacao.
+- `PS5-CONTROLE` deve ser publicado com preço `599` e estoque `100`.
+- `KIT-576001` deve ser ignorado porque não possui preço válido.
+- O token Amazon inicial deve ser renovado antes da publicação.
 
 Exemplo de resposta:
 
@@ -153,14 +160,14 @@ Exemplo de resposta:
 
 ## Testes
 
-Rodar a suite:
+Rodar a suíte:
 
 ```powershell
 cd api
 npm test
 ```
 
-Validacoes adicionais:
+Validações adicionais:
 
 ```powershell
 npm run lint
@@ -171,39 +178,39 @@ Cobertura atual:
 
 - Mapeamento Plugar.me para Amazon.
 - Produto inativo.
-- Produto sem preco valido.
+- Produto sem preço válido.
 - Produto sem estoque.
-- Estoque `0` como valor valido.
+- Estoque `0` como valor válido.
 - Payload Amazon sem custo.
 - Clients HTTP com URL, headers e body corretos.
 - Erro HTTP tipado.
 - Refresh preventivo do token expirado.
-- Refresh apos `401`.
+- Refresh após `401`.
 - Retry simples para `429`.
 - Isolamento de falha por SKU.
-- Logs tecnicos do fluxo sem vazamento de segredos.
+- Logs técnicos do fluxo sem vazamento de segredos.
 - Teste funcional da rota `POST /sync/amazon/offers`.
 - Timeout em chamadas HTTP externas.
-- Limite de produtos por execucao para evitar processamento acidentalmente caro.
-- Rejeicao de identificadores invalidos antes de chamar APIs externas.
+- Limite de produtos por execução para evitar processamento acidentalmente caro.
+- Rejeição de identificadores inválidos antes de chamar APIs externas.
 
 ## Observabilidade e logs
 
-A sincronizacao registra logs estruturados para facilitar troubleshooting em ambiente local ou real. Os principais eventos logados sao:
+A sincronização registra logs estruturados para facilitar troubleshooting em ambiente local ou real. Os principais eventos logados são:
 
-- inicio e fim da sincronizacao;
+- início e fim da sincronização;
 - busca de credenciais Amazon;
 - busca de produtos Plugar.me;
-- avaliacao de expiracao do token;
-- inicio, sucesso e falha de refresh do token Amazon;
-- produto ignorado com motivo tecnico;
-- tentativa de publicacao por SKU;
-- sucesso de publicacao com `submissionId`;
-- rejeicao `401` com refresh e nova tentativa;
+- avaliação de expiração do token;
+- início, sucesso e falha de refresh do token Amazon;
+- produto ignorado com motivo técnico;
+- tentativa de publicação por SKU;
+- sucesso de publicação com `submissionId`;
+- rejeição `401` com refresh e nova tentativa;
 - rate limit `429` com tentativa, limite de retry e backoff aplicado;
-- falha final por SKU com status HTTP, metodo, URL e corpo de erro sanitizado.
+- falha final por SKU com status HTTP, método, URL e corpo de erro sanitizado.
 
-Campos sensiveis sao mascarados antes de entrar nos logs:
+Campos sensíveis são mascarados antes de entrar nos logs:
 
 - `access_token`
 - `refresh_token`
@@ -212,7 +219,7 @@ Campos sensiveis sao mascarados antes de entrar nos logs:
 - `Authorization`
 - `x-amz-access-token`
 
-Essa protecao tambem e coberta por teste automatizado.
+Essa proteção também é coberta por teste automatizado.
 
 ## Cenários manuais com a mock API
 
@@ -228,7 +235,7 @@ Consultar estado:
 Invoke-WebRequest -Uri http://localhost:3333/admin/state
 ```
 
-Alterar preco e estoque na origem:
+Alterar preço e estoque na origem:
 
 ```powershell
 Invoke-WebRequest `
@@ -248,7 +255,7 @@ Invoke-WebRequest `
   -Body '{"quantidade":0}'
 ```
 
-Forcar rate limit na proxima publicacao:
+Forçar rate limit na próxima publicação:
 
 ```powershell
 Invoke-WebRequest -Uri http://localhost:3333/admin/fail-next-listing -Method POST
@@ -260,37 +267,37 @@ Expirar token no mock:
 Invoke-WebRequest -Uri http://localhost:3333/admin/expire-token -Method POST
 ```
 
-## Decisoes tecnicas
+## Decisões técnicas
 
-- A aplicacao fica em `api/` para manter a mock API original no mesmo repositorio.
-- Nao ha banco de dados, migrations, models ou ORM, respeitando a restricao do desafio.
-- A sincronizacao e disparada por rota HTTP: `POST /sync/amazon/offers`.
+- A aplicação fica em `api/` para manter a mock API original no mesmo repositório.
+- Não há banco de dados, migrations, models ou ORM, respeitando a restrição do desafio.
+- A sincronização é disparada por rota HTTP: `POST /sync/amazon/offers`.
 - Os clients HTTP foram separados em `PlugarmeClient`, `AmazonAuthClient` e `AmazonListingsClient`.
-- O servico `SyncAmazonOffersService` concentra a orquestracao e isola falhas por SKU.
-- O token renovado fica apenas em memoria durante a execucao atual.
+- O serviço `SyncAmazonOffersService` concentra a orquestração e isola falhas por SKU.
+- O token renovado fica apenas em memória durante a execução atual.
 - `401` gera refresh e retry do SKU uma vez.
 - `429` usa retry simples com backoff controlado.
-- Produto sem preco valido ou sem estoque da filial configurada e ignorado com motivo explicito.
-- Quantidade `0` e considerada valida e enviada para a Amazon.
+- Produto sem preço válido ou sem estoque da filial configurada é ignorado com motivo explícito.
+- Quantidade `0` é considerada válida e enviada para a Amazon.
 
-## Seguranca
+## Segurança
 
-- `access_token`, `refresh_token` e `client_secret` nao sao registrados em logs.
-- Segredos reais nao devem ser versionados.
-- `.env` fica fora do Git; apenas `.env.example` e versionado.
-- O payload enviado para a Amazon nao inclui custo do produto.
-- A rota de sincronizacao pode ser protegida com `SYNC_API_TOKEN`.
-- `cliente_id` e `filial_id` sao validados como inteiros positivos.
-- O body parser aceita apenas `POST`, limita JSON/form a `10kb` e nao processa multipart.
+- `access_token`, `refresh_token` e `client_secret` não são registrados em logs.
+- Segredos reais não devem ser versionados.
+- `.env` fica fora do Git; apenas `.env.example` é versionado.
+- O payload enviado para a Amazon não inclui custo do produto.
+- A rota de sincronização pode ser protegida com `SYNC_API_TOKEN`.
+- `cliente_id` e `filial_id` são validados como inteiros positivos.
+- O body parser aceita apenas `POST`, limita JSON/form a `10kb` e não processa multipart.
 - CORS fica restrito a `GET/POST`, sem credenciais cross-origin.
 
 ## Controles de custo e recursos
 
-- As chamadas externas possuem timeout configuravel por `HTTP_TIMEOUT_MS`.
-- A sincronizacao aborta se a origem retornar mais produtos que `MAX_PRODUCTS_PER_SYNC`.
-- O processamento e sequencial, o que reduz risco de estouro de rate limit e evita rajadas de chamadas para a Amazon.
+- As chamadas externas possuem timeout configurável por `HTTP_TIMEOUT_MS`.
+- A sincronização aborta se a origem retornar mais produtos que `MAX_PRODUCTS_PER_SYNC`.
+- O processamento é sequencial, o que reduz risco de estouro de rate limit e evita rajadas de chamadas para a Amazon.
 - `429` usa retry simples com backoff e limite de tentativas.
-- Logs truncam strings longas de erro para evitar explosao de volume em respostas externas inesperadas.
+- Logs truncam strings longas de erro para evitar explosão de volume em respostas externas inesperadas.
 
 ## Como adaptar para a SP-API real
 
@@ -298,7 +305,7 @@ Para trocar o mock pela Amazon real, a estrutura principal pode permanecer:
 
 - `AmazonAuthClient` passaria a chamar o endpoint real de Login with Amazon.
 - `AmazonListingsClient` passaria a usar a URL real da Selling Partner API.
-- Seria necessario adicionar a assinatura AWS SigV4 exigida pela SP-API real.
-- Segredos deveriam sair de um cofre ou provedor seguro, nao de `.env` local.
+- Seria necessário adicionar a assinatura AWS SigV4 exigida pela SP-API real.
+- Segredos deveriam sair de um cofre ou provedor seguro, não de `.env` local.
 - Retries deveriam respeitar os headers reais de rate limit da Amazon.
-- Persistencia de tokens poderia ser adicionada se a aplicacao passasse a rodar continuamente.
+- Persistência de tokens poderia ser adicionada se a aplicação passasse a rodar continuamente.
