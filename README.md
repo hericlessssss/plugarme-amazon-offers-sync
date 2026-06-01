@@ -22,7 +22,7 @@ api/
   tests/unit/     # Testes unitários
 
 mock-api/         # API externa simulada do desafio
-docs/             # Material auxiliar de onboarding
+docs/             # Documentação complementar da API
 ```
 
 ## Variáveis de ambiente
@@ -93,6 +93,12 @@ Documentação local da API:
 ```http
 GET http://localhost:3334/docs
 GET http://localhost:3334/openapi.json
+```
+
+Documentação complementar do contrato HTTP:
+
+```text
+docs/api.md
 ```
 
 Disparar sincronização:
