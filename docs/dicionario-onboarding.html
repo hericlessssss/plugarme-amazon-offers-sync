@@ -1,0 +1,1486 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dicionário do Desafio Plugar.me → Amazon Brasil</title>
+  <style>
+    :root {
+      --bg: #f5f7fa;
+      --surface: #ffffff;
+      --surface-2: #eef3f8;
+      --ink: #172033;
+      --muted: #5e6b80;
+      --line: #d9e1ea;
+      --accent: #146c94;
+      --accent-2: #1f8a70;
+      --warning: #9a6414;
+      --danger: #a33a3a;
+      --code: #243447;
+      --shadow: 0 18px 44px rgba(23, 32, 51, 0.08);
+      --radius: 8px;
+      --max: 1180px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        linear-gradient(180deg, #f9fbfd 0%, var(--bg) 320px),
+        var(--bg);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.58;
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    code,
+    pre {
+      font-family: "Cascadia Code", "JetBrains Mono", Consolas, monospace;
+    }
+
+    code {
+      color: #133c55;
+      background: #e8f1f7;
+      border: 1px solid #d5e5ef;
+      border-radius: 5px;
+      padding: 0.1rem 0.32rem;
+      font-size: 0.92em;
+    }
+
+    pre {
+      margin: 1rem 0;
+      padding: 1rem;
+      overflow: auto;
+      color: #e8edf5;
+      background: var(--code);
+      border-radius: var(--radius);
+      border: 1px solid #152334;
+    }
+
+    pre code {
+      color: inherit;
+      background: transparent;
+      border: 0;
+      padding: 0;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .topbar-inner {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 0.75rem 1.25rem;
+      display: grid;
+      grid-template-columns: minmax(190px, 1fr) minmax(260px, 420px);
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      min-width: 0;
+    }
+
+    .brand-mark {
+      width: 36px;
+      height: 36px;
+      display: grid;
+      place-items: center;
+      flex: 0 0 auto;
+      color: white;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      border-radius: 8px;
+      font-weight: 800;
+      letter-spacing: 0;
+    }
+
+    .brand strong {
+      display: block;
+      font-size: 0.98rem;
+      line-height: 1.2;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .brand span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.78rem;
+      line-height: 1.2;
+    }
+
+    .search {
+      position: relative;
+    }
+
+    .search input {
+      width: 100%;
+      height: 40px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 0 0.9rem 0 2.35rem;
+      color: var(--ink);
+      background: #fff;
+      font: inherit;
+      outline: none;
+    }
+
+    .search input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(20, 108, 148, 0.14);
+    }
+
+    .search::before {
+      content: "⌕";
+      position: absolute;
+      left: 0.85rem;
+      top: 0.43rem;
+      color: var(--muted);
+      font-size: 1.15rem;
+      line-height: 1;
+    }
+
+    .hero {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 3.4rem 1.25rem 2.1rem;
+      display: grid;
+      grid-template-columns: minmax(0, 1.45fr) minmax(280px, 0.72fr);
+      gap: 2rem;
+      align-items: end;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      gap: 0.5rem;
+      align-items: center;
+      color: var(--accent);
+      font-weight: 750;
+      text-transform: uppercase;
+      font-size: 0.78rem;
+      letter-spacing: 0.05em;
+    }
+
+    h1 {
+      margin: 0.55rem 0 0.9rem;
+      max-width: 820px;
+      font-size: clamp(2rem, 4vw, 4rem);
+      line-height: 1.02;
+      letter-spacing: 0;
+    }
+
+    .hero p {
+      max-width: 760px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 1.08rem;
+    }
+
+    .hero-panel {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 1rem;
+    }
+
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.75rem;
+    }
+
+    .stat {
+      padding: 0.9rem;
+      background: var(--surface-2);
+      border-radius: 8px;
+      border: 1px solid var(--line);
+    }
+
+    .stat b {
+      display: block;
+      font-size: 1.35rem;
+      line-height: 1;
+    }
+
+    .stat span {
+      display: block;
+      margin-top: 0.35rem;
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+
+    .layout {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 0 1.25rem 4rem;
+      display: grid;
+      grid-template-columns: 270px minmax(0, 1fr);
+      gap: 1.5rem;
+      align-items: start;
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 73px;
+      max-height: calc(100vh - 88px);
+      overflow: auto;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 0.8rem;
+    }
+
+    .sidebar h2 {
+      margin: 0.25rem 0.5rem 0.65rem;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+    }
+
+    .nav-list {
+      display: grid;
+      gap: 0.15rem;
+    }
+
+    .nav-list a {
+      display: block;
+      padding: 0.46rem 0.55rem;
+      border-radius: 6px;
+      color: var(--ink);
+      font-size: 0.91rem;
+    }
+
+    .nav-list a:hover {
+      background: var(--surface-2);
+      text-decoration: none;
+    }
+
+    main {
+      min-width: 0;
+      display: grid;
+      gap: 1rem;
+    }
+
+    section {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: clamp(1.1rem, 2.5vw, 1.65rem);
+      scroll-margin-top: 90px;
+    }
+
+    section.hidden-by-search,
+    article.hidden-by-search {
+      display: none;
+    }
+
+    h2 {
+      margin: 0 0 0.8rem;
+      font-size: 1.45rem;
+      line-height: 1.22;
+      letter-spacing: 0;
+    }
+
+    h3 {
+      margin: 1.4rem 0 0.55rem;
+      font-size: 1.04rem;
+      letter-spacing: 0;
+    }
+
+    p {
+      margin: 0.6rem 0;
+    }
+
+    ul,
+    ol {
+      margin: 0.7rem 0;
+      padding-left: 1.35rem;
+    }
+
+    li + li {
+      margin-top: 0.28rem;
+    }
+
+    .callout {
+      margin: 1rem 0;
+      padding: 0.9rem 1rem;
+      border-radius: var(--radius);
+      border: 1px solid #cfe1ee;
+      background: #edf7fc;
+    }
+
+    .callout strong {
+      color: #0f5877;
+    }
+
+    .warning {
+      border-color: #ead9b9;
+      background: #fff8ea;
+    }
+
+    .warning strong {
+      color: var(--warning);
+    }
+
+    .danger {
+      border-color: #edc8c8;
+      background: #fff1f1;
+    }
+
+    .danger strong {
+      color: var(--danger);
+    }
+
+    .diagram {
+      display: grid;
+      gap: 0.5rem;
+      margin: 1rem 0;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: 38px minmax(0, 1fr);
+      gap: 0.75rem;
+      align-items: start;
+      padding: 0.85rem;
+      background: #f8fafc;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+    }
+
+    .step-number {
+      width: 32px;
+      height: 32px;
+      display: grid;
+      place-items: center;
+      color: #fff;
+      background: var(--accent);
+      border-radius: 999px;
+      font-weight: 800;
+      font-size: 0.9rem;
+    }
+
+    .step strong {
+      display: block;
+      margin-bottom: 0.2rem;
+    }
+
+    .step span {
+      color: var(--muted);
+      font-size: 0.94rem;
+    }
+
+    .term-grid {
+      display: grid;
+      gap: 0.8rem;
+    }
+
+    article.term {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 1rem;
+      background: #fbfcfe;
+    }
+
+    article.term h3 {
+      margin: 0 0 0.5rem;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.45rem;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      min-height: 23px;
+      padding: 0.12rem 0.48rem;
+      border: 1px solid #cbdce8;
+      border-radius: 999px;
+      color: #28506a;
+      background: #eef6fb;
+      font-size: 0.72rem;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    .badge.green {
+      color: #1b604f;
+      background: #eaf7f1;
+      border-color: #c8e7da;
+    }
+
+    .badge.orange {
+      color: #84510d;
+      background: #fff4dd;
+      border-color: #ead4a8;
+    }
+
+    .table-wrap {
+      overflow: auto;
+      margin: 1rem 0;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 620px;
+      background: #fff;
+    }
+
+    th,
+    td {
+      padding: 0.72rem 0.82rem;
+      text-align: left;
+      vertical-align: top;
+      border-bottom: 1px solid var(--line);
+    }
+
+    th {
+      color: #324258;
+      background: #f1f5f9;
+      font-size: 0.86rem;
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .checklist {
+      display: grid;
+      gap: 0.45rem;
+      padding-left: 0;
+      list-style: none;
+    }
+
+    .checklist li {
+      position: relative;
+      padding-left: 1.8rem;
+    }
+
+    .checklist li::before {
+      content: "✓";
+      position: absolute;
+      left: 0;
+      top: 0.05rem;
+      width: 1.15rem;
+      height: 1.15rem;
+      display: grid;
+      place-items: center;
+      color: #fff;
+      background: var(--accent-2);
+      border-radius: 999px;
+      font-size: 0.72rem;
+      font-weight: 900;
+    }
+
+    .footer-note {
+      color: var(--muted);
+      font-size: 0.9rem;
+      text-align: center;
+      padding: 1rem 0 0;
+    }
+
+    mark {
+      background: #fff0a8;
+      color: inherit;
+      padding: 0 0.12rem;
+      border-radius: 3px;
+    }
+
+    @media print {
+      body {
+        background: #fff;
+      }
+
+      .topbar,
+      .sidebar {
+        display: none;
+      }
+
+      .hero,
+      .layout {
+        display: block;
+        max-width: none;
+        padding: 0;
+      }
+
+      section {
+        break-inside: avoid;
+        box-shadow: none;
+        border-color: #bbb;
+        margin-bottom: 1rem;
+      }
+    }
+
+    @media (max-width: 900px) {
+      .topbar-inner,
+      .hero,
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        position: static;
+        max-height: none;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .topbar-inner {
+        padding: 0.65rem 0.85rem;
+      }
+
+      .hero {
+        padding: 2.2rem 0.9rem 1rem;
+      }
+
+      .layout {
+        padding: 0 0.9rem 2rem;
+      }
+
+      .stat-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand" aria-label="Documento de onboarding">
+        <div class="brand-mark">PM</div>
+        <div>
+          <strong>Dicionário do Desafio Técnico</strong>
+          <span>Plugar.me → Amazon Brasil</span>
+        </div>
+      </div>
+      <label class="search" aria-label="Buscar no documento">
+        <input id="searchInput" type="search" placeholder="Buscar termo: API, SKU, AdonisJS, token..." />
+      </label>
+    </div>
+  </header>
+
+  <div class="hero">
+    <div>
+      <span class="eyebrow">Wiki local autocontida</span>
+      <h1>Onboarding conceitual para entender o desafio antes de codar</h1>
+      <p>
+        Este documento explica, em linguagem direta, os termos técnicos, ferramentas, protocolos,
+        decisões e regras de negócio envolvidos na integração entre a Plugar.me e a Amazon Brasil.
+        Ele foi feito para ser consultado durante todo o projeto.
+      </p>
+    </div>
+    <aside class="hero-panel" aria-label="Resumo do documento">
+      <div class="stat-grid">
+        <div class="stat">
+          <b>4</b>
+          <span>camadas principais: rota/comando, serviço, clientes HTTP e configuração</span>
+        </div>
+        <div class="stat">
+          <b>3</b>
+          <span>APIs mock consumidas: produtos, credenciais e Amazon Listings</span>
+        </div>
+        <div class="stat">
+          <b>0</b>
+          <span>banco de dados obrigatório no desafio</span>
+        </div>
+        <div class="stat">
+          <b>100</b>
+          <span>pontos de avaliação distribuídos entre integração, token, código e erros</span>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <div class="layout">
+    <aside class="sidebar">
+      <h2>Navegação</h2>
+      <nav class="nav-list">
+        <a href="#visao-geral">Visão Geral</a>
+        <a href="#mapa-fluxo">Mapa do Fluxo</a>
+        <a href="#tecnologias">Linguagens e Ferramentas</a>
+        <a href="#api-http">API, REST e HTTP</a>
+        <a href="#amazon">Amazon SP-API e LWA</a>
+        <a href="#negocio">Termos de Negócio</a>
+        <a href="#arquitetura">Arquitetura Recomendada</a>
+        <a href="#erros">Erros, Logs e Resiliência</a>
+        <a href="#glossario">Glossário Completo</a>
+        <a href="#checklist">Checklist de Domínio</a>
+      </nav>
+    </aside>
+
+    <main id="content">
+      <section id="visao-geral" data-search-area>
+        <h2>Visão Geral Do Desafio</h2>
+        <p>
+          O desafio pede uma aplicação em <strong>Node.js, TypeScript e AdonisJS</strong> para sincronizar
+          preço e estoque de produtos da Plugar.me com a Amazon Brasil. A Amazon usada no teste não é real:
+          existe uma <strong>API mock</strong> que simula as respostas esperadas.
+        </p>
+        <div class="callout">
+          <strong>Ideia principal:</strong> buscar produtos na origem, filtrar os produtos válidos,
+          transformar os dados no formato que a Amazon espera e enviar uma atualização parcial da oferta.
+        </div>
+        <p>
+          O desafio não pede criação de anúncios, importação de pedidos, painel administrativo, banco de dados,
+          autenticação de usuários nem integração com a Amazon real. O foco está em integração, tratamento de token,
+          qualidade de código e robustez diante de falhas.
+        </p>
+        <h3>O que precisa acontecer</h3>
+        <ul class="checklist">
+          <li>Consultar produtos, preços e estoques na API mock da Plugar.me.</li>
+          <li>Consultar credenciais Amazon do cliente na API mock da Plugar.me.</li>
+          <li>Renovar o token Amazon usando o refresh token.</li>
+          <li>Atualizar preço e estoque dos SKUs válidos na API mock da Amazon.</li>
+          <li>Gerar um resultado com itens publicados, ignorados e falhas.</li>
+        </ul>
+      </section>
+
+      <section id="mapa-fluxo" data-search-area>
+        <h2>Mapa Do Fluxo</h2>
+        <p>
+          O fluxo abaixo mostra a ordem mental mais simples para entender a solução. Uma implementação real pode
+          dividir isso em classes e métodos, mas a lógica central permanece a mesma.
+        </p>
+        <div class="diagram">
+          <div class="step">
+            <div class="step-number">1</div>
+            <div>
+              <strong>Disparo da sincronização</strong>
+              <span>Uma rota HTTP ou comando Ace inicia o processo. Exemplo: <code>POST /sync/amazon/offers</code>.</span>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-number">2</div>
+            <div>
+              <strong>Busca de dados Plugar.me</strong>
+              <span>A aplicação consulta produtos, preços, estoques e credenciais Amazon do cliente.</span>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-number">3</div>
+            <div>
+              <strong>Renovação do token</strong>
+              <span>O access token inicial está expirado. A aplicação usa o refresh token para obter um token válido.</span>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-number">4</div>
+            <div>
+              <strong>Filtro e mapeamento dos produtos</strong>
+              <span>Cada produto é validado: ativo, com preço válido e com estoque da filial configurada.</span>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-number">5</div>
+            <div>
+              <strong>PATCH na Amazon Listings mock</strong>
+              <span>A aplicação envia preço e quantidade no payload esperado pela Amazon.</span>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-number">6</div>
+            <div>
+              <strong>Resultado final</strong>
+              <span>O retorno informa quantos SKUs foram publicados, ignorados ou falharam.</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="tecnologias" data-search-area>
+        <h2>Linguagens, Frameworks E Ferramentas</h2>
+        <article class="term">
+          <h3>Node.js <span class="badge">runtime</span></h3>
+          <p>
+            Node.js é um ambiente de execução para JavaScript fora do navegador. Ele permite criar servidores,
+            scripts, APIs, integrações, ferramentas de linha de comando e aplicações backend.
+          </p>
+          <p>
+            Ele não é uma linguagem. A linguagem é JavaScript. O Node.js é o programa que executa JavaScript no
+            backend e fornece acesso a recursos como arquivos, rede, HTTP, variáveis de ambiente e processos.
+          </p>
+        </article>
+
+        <article class="term">
+          <h3>TypeScript <span class="badge">linguagem</span></h3>
+          <p>
+            TypeScript é uma linguagem baseada em JavaScript que adiciona tipos. No fim, o TypeScript é convertido
+            para JavaScript para ser executado pelo Node.js.
+          </p>
+          <p>
+            No desafio, TypeScript ajuda a descrever contratos: o formato de um produto Plugar.me, de uma credencial
+            Amazon, de um payload de atualização e do resultado final da sincronização.
+          </p>
+        </article>
+
+        <article class="term">
+          <h3>AdonisJS <span class="badge">framework backend</span></h3>
+          <p>
+            AdonisJS é um framework backend para Node.js. Framework é um conjunto de ferramentas, padrões e estruturas
+            que ajuda a construir uma aplicação de forma organizada.
+          </p>
+          <p>
+            Ele não é linguagem, não é banco de dados e não é servidor externo. Ele é uma base de aplicação que fornece
+            rotas, controllers, comandos Ace, validação, logger, configuração, injeção de dependências e organização
+            de código.
+          </p>
+          <div class="callout">
+            <strong>Por que AdonisJS é framework?</strong> Porque ele define uma estrutura de desenvolvimento e entrega
+            peças prontas para resolver problemas comuns de backend. Você escreve a regra de negócio dentro dessa
+            estrutura em vez de montar tudo manualmente do zero.
+          </div>
+        </article>
+
+        <article class="term">
+          <h3>Ace <span class="badge">CLI do AdonisJS</span></h3>
+          <p>
+            Ace é a ferramenta de linha de comando do AdonisJS. Ela permite executar comandos do projeto, como criar
+            arquivos, rodar tarefas e disparar rotinas internas.
+          </p>
+          <p>
+            No desafio, a sincronização pode ser disparada por uma rota HTTP ou por um comando Ace. Um comando Ace seria
+            útil para algo como <code>node ace sync:amazon-offers</code>.
+          </p>
+        </article>
+
+        <article class="term">
+          <h3>npm <span class="badge">gerenciador de pacotes</span></h3>
+          <p>
+            npm é usado para instalar bibliotecas, rodar scripts e gerenciar dependências de projetos Node.js. O arquivo
+            <code>package.json</code> declara os scripts e pacotes usados pelo projeto.
+          </p>
+        </article>
+      </section>
+
+      <section id="api-http" data-search-area>
+        <h2>API, REST E HTTP</h2>
+        <article class="term">
+          <h3>API <span class="badge">contrato entre sistemas</span></h3>
+          <p>
+            API significa Application Programming Interface. Em termos práticos, é uma forma definida de um sistema
+            conversar com outro. Uma API diz quais operações existem, quais dados enviar, quais respostas esperar e
+            quais erros podem acontecer.
+          </p>
+          <p>
+            Nem toda API é web. Existem APIs de bibliotecas, APIs de sistema operacional, APIs internas de código e APIs
+            HTTP. Neste desafio, quando falamos API, estamos falando principalmente de API HTTP.
+          </p>
+        </article>
+
+        <article class="term">
+          <h3>API REST <span class="badge">estilo arquitetural</span></h3>
+          <p>
+            REST é um estilo de arquitetura para construir APIs usando conceitos da web, principalmente HTTP, recursos
+            e métodos como GET, POST, PATCH e DELETE.
+          </p>
+          <p>
+            Uma API REST costuma organizar URLs em torno de recursos. Exemplo: <code>/produtos</code> representa uma
+            coleção de produtos. Uma chamada <code>GET /produtos</code> busca produtos; uma chamada <code>PATCH /produtos/123</code>
+            altera parcialmente o produto 123.
+          </p>
+          <div class="callout">
+            <strong>Diferença simples:</strong> API é o contrato de comunicação. REST é um estilo específico para
+            desenhar APIs, normalmente usando HTTP e recursos bem definidos.
+          </div>
+        </article>
+
+        <article class="term">
+          <h3>HTTP <span class="badge">protocolo</span></h3>
+          <p>
+            HTTP é o protocolo de comunicação usado na web. Ele define como um cliente envia uma requisição e como um
+            servidor devolve uma resposta.
+          </p>
+          <p>
+            No desafio, a aplicação AdonisJS será cliente das APIs mock. Ela enviará requisições HTTP para buscar dados
+            e atualizar ofertas.
+          </p>
+        </article>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Método HTTP</th>
+                <th>Significado</th>
+                <th>Uso no desafio</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>GET</code></td>
+                <td>Buscar informações sem alterar o recurso.</td>
+                <td>Buscar produtos e credenciais.</td>
+              </tr>
+              <tr>
+                <td><code>POST</code></td>
+                <td>Criar algo ou executar uma ação que processa dados.</td>
+                <td>Renovar token no endpoint LWA mock.</td>
+              </tr>
+              <tr>
+                <td><code>PATCH</code></td>
+                <td>Atualizar parcialmente um recurso existente.</td>
+                <td>Atualizar preço e estoque de um SKU na Amazon mock.</td>
+              </tr>
+              <tr>
+                <td><code>PUT</code></td>
+                <td>Substituir um recurso inteiro.</td>
+                <td>Não é necessário neste desafio.</td>
+              </tr>
+              <tr>
+                <td><code>DELETE</code></td>
+                <td>Remover um recurso.</td>
+                <td>Não é necessário neste desafio.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>Códigos HTTP</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Código</th>
+                <th>Categoria</th>
+                <th>Interpretação prática</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>200</code></td>
+                <td>Sucesso</td>
+                <td>A requisição funcionou e retornou dados.</td>
+              </tr>
+              <tr>
+                <td><code>202</code></td>
+                <td>Sucesso aceito</td>
+                <td>A Amazon mock aceitou a atualização da oferta.</td>
+              </tr>
+              <tr>
+                <td><code>400</code></td>
+                <td>Erro do cliente</td>
+                <td>A requisição está malformada ou inválida.</td>
+              </tr>
+              <tr>
+                <td><code>401</code></td>
+                <td>Não autorizado</td>
+                <td>Token ausente, inválido ou expirado. Deve acionar renovação do token.</td>
+              </tr>
+              <tr>
+                <td><code>422</code></td>
+                <td>Dados inválidos</td>
+                <td>O servidor entendeu a requisição, mas rejeitou o conteúdo.</td>
+              </tr>
+              <tr>
+                <td><code>429</code></td>
+                <td>Rate limit</td>
+                <td>Muitas requisições. Deve haver retry com espera/backoff.</td>
+              </tr>
+              <tr>
+                <td><code>500</code></td>
+                <td>Erro do servidor</td>
+                <td>Falha inesperada no servidor chamado.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="amazon" data-search-area>
+        <h2>Amazon SP-API E LWA</h2>
+        <article class="term">
+          <h3>Amazon SP-API <span class="badge">API de marketplace</span></h3>
+          <p>
+            SP-API significa Selling Partner API. É a API oficial da Amazon para vendedores, integradores e parceiros.
+            Ela permite operar dados como pedidos, catálogo, preço, estoque, anúncios e relatórios.
+          </p>
+          <p>
+            No desafio, não usamos a SP-API real. Usamos uma API mock que simula o comportamento mínimo necessário para
+            atualizar uma oferta existente.
+          </p>
+        </article>
+
+        <article class="term">
+          <h3>LWA <span class="badge">Login with Amazon</span></h3>
+          <p>
+            LWA é o mecanismo de autenticação da Amazon baseado em OAuth 2.0. Ele permite trocar um
+            <code>refresh_token</code> por um <code>access_token</code>.
+          </p>
+          <p>
+            O <code>access_token</code> é enviado no header <code>x-amz-access-token</code> nas chamadas da Amazon.
+            No mock, o token inicial sempre vem expirado para forçar o tratamento correto.
+          </p>
+        </article>
+
+        <article class="term">
+          <h3>Access token <span class="badge orange">credencial sensível</span></h3>
+          <p>
+            É o token temporário usado para autorizar chamadas à Amazon. Ele expira. Quando expira, a API pode retornar
+            <code>401</code>. A aplicação deve renovar e tentar novamente.
+          </p>
+        </article>
+
+        <article class="term">
+          <h3>Refresh token <span class="badge orange">credencial sensível</span></h3>
+          <p>
+            É o token usado para pedir novos access tokens. Ele é mais sensível que o access token porque permite gerar
+            novos tokens. Nunca deve aparecer em logs.
+          </p>
+        </article>
+
+        <article class="term">
+          <h3>Client ID e Client Secret <span class="badge orange">credenciais</span></h3>
+          <p>
+            Identificam a aplicação junto ao provedor de autenticação. O <code>client_secret</code> funciona como uma
+            senha da aplicação e também não deve ser logado.
+          </p>
+        </article>
+
+        <div class="danger">
+          <strong>Regra de segurança:</strong> logs podem mostrar SKU, status, motivo de falha e contadores, mas nunca
+          devem mostrar <code>access_token</code>, <code>refresh_token</code> ou <code>client_secret</code>.
+        </div>
+      </section>
+
+      <section id="negocio" data-search-area>
+        <h2>Termos De Negócio Da Integração</h2>
+        <article class="term">
+          <h3>Plugar.me <span class="badge">hub de integração</span></h3>
+          <p>
+            A Plugar.me atua como ponte entre sistemas como ERPs, e-commerces e marketplaces. Neste desafio, ela é a
+            origem dos dados de produto, preço, estoque e credenciais Amazon.
+          </p>
+        </article>
+
+        <article class="term">
+          <h3>Marketplace <span class="badge">canal de venda</span></h3>
+          <p>
+            Marketplace é uma plataforma onde vários vendedores podem anunciar e vender produtos. Amazon Brasil é o
+            marketplace de destino neste desafio.
+          </p>
+        </article>
+
+        <article class="term">
+          <h3>ERP <span class="badge">sistema de gestão</span></h3>
+          <p>
+            ERP é o sistema usado por empresas para controlar dados internos como produtos, estoque, preço, financeiro
+            e pedidos. O campo <code>erp_id</code> representa o identificador do produto na origem.
+          </p>
+        </article>
+
+        <article class="term">
+          <h3>SKU <span class="badge">identificador comercial</span></h3>
+          <p>
+            SKU é o código usado para identificar um produto ou variação vendável. No desafio, o SKU enviado para a
+            Amazon deve ser o valor de <code>erp_id</code> do produto Plugar.me.
+          </p>
+        </article>
+
+        <article class="term">
+          <h3>Filial <span class="badge">unidade operacional</span></h3>
+          <p>
+            Filial representa uma unidade da empresa. Um mesmo produto pode ter preços e estoques diferentes por filial.
+            O desafio exige selecionar preço e estoque apenas da filial configurada em <code>FILIAL_ID</code>.
+          </p>
+        </article>
+
+        <article class="term">
+          <h3>Oferta <span class="badge">preço + disponibilidade</span></h3>
+          <p>
+            Neste contexto, oferta é o conjunto de informações comerciais do anúncio: preço, moeda, estoque disponível
+            e canal de fulfillment. O anúncio já existe; a aplicação apenas atualiza a oferta.
+          </p>
+        </article>
+
+        <article class="term">
+          <h3>Preço válido <span class="badge green">regra de negócio</span></h3>
+          <p>
+            Preço válido é um valor numérico que pode ser enviado para a Amazon. Produto sem preço da filial configurada
+            deve ser ignorado e registrado em log.
+          </p>
+        </article>
+
+        <article class="term">
+          <h3>Estoque zero <span class="badge green">valor válido</span></h3>
+          <p>
+            Quantidade <code>0</code> é válida. Ela significa que o produto está sem disponibilidade, mas ainda assim
+            deve ser enviada quando houver preço válido e registro de estoque.
+          </p>
+        </article>
+      </section>
+
+      <section id="arquitetura" data-search-area>
+        <h2>Arquitetura Recomendada</h2>
+        <p>
+          A forma mais clara de implementar é separar o código por responsabilidade. Isso mostra maturidade porque cada
+          parte do sistema tem um motivo específico para existir.
+        </p>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Componente</th>
+                <th>Responsabilidade</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>PlugarmeClient</code></td>
+                <td>Buscar produtos e credenciais na API mock da Plugar.me.</td>
+              </tr>
+              <tr>
+                <td><code>AmazonAuthClient</code></td>
+                <td>Renovar access token usando refresh token, client id e client secret.</td>
+              </tr>
+              <tr>
+                <td><code>AmazonListingsClient</code></td>
+                <td>Enviar PATCH de preço e estoque para a Amazon Listings mock.</td>
+              </tr>
+              <tr>
+                <td><code>SyncAmazonOffersService</code></td>
+                <td>Orquestrar o fluxo: buscar, filtrar, renovar token, publicar e consolidar resultado.</td>
+              </tr>
+              <tr>
+                <td><code>Controller</code> ou <code>Command</code></td>
+                <td>Receber o disparo externo e chamar o serviço de sincronização.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <h3>Por que separar assim?</h3>
+        <p>
+          Porque a regra de negócio fica independente dos detalhes de HTTP. Se amanhã a URL mudar, o ajuste fica no
+          client. Se a regra de filtro mudar, o ajuste fica no serviço. Isso facilita leitura, teste e manutenção.
+        </p>
+        <pre><code>Controller ou Command
+  ↓
+SyncAmazonOffersService
+  ↓
+PlugarmeClient
+AmazonAuthClient
+AmazonListingsClient</code></pre>
+      </section>
+
+      <section id="erros" data-search-area>
+        <h2>Erros, Logs E Resiliência</h2>
+        <article class="term">
+          <h3>Resiliência <span class="badge">continuidade sob falha</span></h3>
+          <p>
+            Resiliência é a capacidade da aplicação continuar funcionando mesmo quando uma parte falha. No desafio, se
+            um SKU falhar, os próximos SKUs ainda devem ser processados.
+          </p>
+        </article>
+
+        <article class="term">
+          <h3>Retry <span class="badge">nova tentativa</span></h3>
+          <p>
+            Retry é tentar novamente uma operação que falhou. Deve ser usado com cuidado. Para <code>429</code>, um
+            retry simples com espera progressiva é suficiente.
+          </p>
+        </article>
+
+        <article class="term">
+          <h3>Backoff <span class="badge">espera progressiva</span></h3>
+          <p>
+            Backoff é esperar um pouco antes de tentar de novo. Exemplo: primeira tentativa falha, espera 300 ms; se
+            falhar de novo, espera 700 ms; depois marca como falha.
+          </p>
+        </article>
+
+        <article class="term">
+          <h3>Observabilidade <span class="badge">entender o que aconteceu</span></h3>
+          <p>
+            Observabilidade é a capacidade de investigar o comportamento da aplicação por meio de logs, métricas e
+            resultados. No desafio, bons logs e uma resposta final bem organizada já ajudam bastante.
+          </p>
+        </article>
+
+        <div class="warning">
+          <strong>Boa prática:</strong> registre eventos como "SKU publicado", "SKU ignorado por ausência de preço" e
+          "SKU falhou com status 422". Evite logs genéricos como "erro ao processar".
+        </div>
+      </section>
+
+      <section id="glossario" data-search-area>
+        <h2>Glossário Completo</h2>
+        <div class="term-grid">
+          <article class="term" data-term>
+            <h3>Mock <span class="badge">simulação</span></h3>
+            <p>
+              Mock é uma simulação controlada de um sistema real. A API mock do desafio imita a Plugar.me e a Amazon
+              para que a integração seja desenvolvida sem depender de serviços reais.
+            </p>
+          </article>
+
+          <article class="term" data-term>
+            <h3>Endpoint <span class="badge">ponto de acesso</span></h3>
+            <p>
+              Endpoint é uma URL específica de uma API. Exemplo:
+              <code>/plugarme/v1/produtos</code> é o endpoint para buscar produtos.
+            </p>
+          </article>
+
+          <article class="term" data-term>
+            <h3>Request ou Requisição <span class="badge">pedido HTTP</span></h3>
+            <p>
+              É a mensagem enviada pelo cliente para o servidor. Inclui método, URL, headers, query params e, em alguns
+              casos, body.
+            </p>
+          </article>
+
+          <article class="term" data-term>
+            <h3>Response ou Resposta <span class="badge">retorno HTTP</span></h3>
+            <p>
+              É a mensagem devolvida pelo servidor. Inclui status HTTP, headers e body.
+            </p>
+          </article>
+
+          <article class="term" data-term>
+            <h3>Header <span class="badge">metadado HTTP</span></h3>
+            <p>
+              Header é uma informação extra enviada em uma requisição ou resposta. Exemplo:
+              <code>Authorization: Bearer plugarme-test-token</code>.
+            </p>
+          </article>
+
+          <article class="term" data-term>
+            <h3>Authorization Bearer <span class="badge">autorização</span></h3>
+            <p>
+              É um padrão comum para enviar token em APIs HTTP. "Bearer" indica que quem carrega aquele token tem
+              permissão para acessar o recurso.
+            </p>
+          </article>
+
+          <article class="term" data-term>
+            <h3>Query params <span class="badge">parâmetros na URL</span></h3>
+            <p>
+              São valores enviados após o sinal <code>?</code> na URL. Exemplo:
+              <code>?cliente_id=1&amp;filial_id=6</code>.
+            </p>
+          </article>
+
+          <article class="term" data-term>
+            <h3>Body <span class="badge">corpo da requisição</span></h3>
+            <p>
+              É o conteúdo enviado na requisição. Em um <code>PATCH</code>, o body geralmente contém os dados que devem
+              ser alterados.
+            </p>
+          </article>
+
+          <article class="term" data-term>
+            <h3>Payload <span class="badge">dados enviados</span></h3>
+            <p>
+              Payload é o conjunto de dados úteis enviados em uma requisição ou resposta. No desafio, o payload da Amazon
+              contém <code>productType</code> e <code>patches</code>.
+            </p>
+          </article>
+
+          <article class="term" data-term>
+            <h3>JSON <span class="badge">formato de dados</span></h3>
+            <p>
+              JSON é um formato textual para representar objetos e listas. APIs modernas usam JSON porque é simples de
+              ler, gerar e consumir.
+            </p>
+          </article>
+
+          <article class="term" data-term>
+            <h3>Form URL Encoded <span class="badge">formato de body</span></h3>
+            <p>
+              É um formato de envio de dados parecido com query params, mas no corpo da requisição. O endpoint de token
+              usa <code>application/x-www-form-urlencoded</code>.
+            </p>
+          </article>
+
+          <article class="term" data-term>
+            <h3>PATCH <span class="badge">atualização parcial</span></h3>
+            <p>
+              PATCH é o método HTTP usado para atualizar parte de um recurso. No desafio, ele altera apenas preço e
+              estoque de uma oferta existente.
+            </p>
+          </article>
+
+          <article class="term" data-term>
+            <h3>Replace <span class="badge">operação de patch</span></h3>
+            <p>
+              No payload da Amazon, <code>replace</code> indica que um atributo deve ser substituído. É usado para
+              atualizar <code>purchasable_offer</code>, ou seja, o preço.
+            </p>
+          </article>
+
+          <article class="term" data-term>
+            <h3>Merge <span class="badge">operação de patch</span></h3>
+            <p>
+              <code>merge</code> combina os dados enviados com os dados existentes. No desafio, é usado para atualizar
+              <code>fulfillment_availability</code>, ou seja, disponibilidade/estoque.
+            </p>
+          </article>
+
+          <article class="term" data-term>
+            <h3>Product Type <span class="badge">tipo de produto</span></h3>
+            <p>
+              Na Amazon, <code>productType</code> descreve o tipo de produto. O mock aceita <code>PRODUCT</code> para
+              simplificar o teste.
+            </p>
+          </article>
+
+          <article class="term" data-term>
+            <h3>Purchasable Offer <span class="badge">preço da oferta</span></h3>
+            <p>
+              É o atributo da Amazon que representa a oferta comprável. No desafio, contém marketplace, moeda e preço com
+              imposto.
+            </p>
+          </article>
+
+          <article class="term" data-term>
+            <h3>Fulfillment Availability <span class="badge">disponibilidade</span></h3>
+            <p>
+              É o atributo que representa estoque disponível para venda. No payload, inclui
+              <code>fulfillment_channel_code</code> e <code>quantity</code>.
+            </p>
+          </article>
+
+          <article class="term" data-term>
+            <h3>Marketplace ID <span class="badge">identificador da praça</span></h3>
+            <p>
+              Identifica o marketplace específico dentro da Amazon. Para Amazon Brasil no mock:
+              <code>A2Q3Y263D00KWC</code>.
+            </p>
+          </article>
+
+          <article class="term" data-term>
+            <h3>Seller ID <span class="badge">identificador do vendedor</span></h3>
+            <p>
+              Identifica a conta vendedora na Amazon. O PATCH de listing usa seller ID e SKU para encontrar o item certo.
+            </p>
+          </article>
+
+          <article class="term" data-term>
+            <h3>Currency BRL <span class="badge">moeda</span></h3>
+            <p>
+              BRL é o código ISO da moeda brasileira, o Real. O preço enviado à Amazon Brasil deve usar essa moeda no
+              payload mock.
+            </p>
+          </article>
+
+          <article class="term" data-term>
+            <h3>Idempotência <span class="badge">repetição segura</span></h3>
+            <p>
+              Uma operação é idempotente quando repetir a mesma chamada tende a produzir o mesmo estado final. Atualizar
+              o mesmo SKU com o mesmo preço e estoque deve deixar a oferta no mesmo estado.
+            </p>
+          </article>
+
+          <article class="term" data-term>
+            <h3>Variáveis de ambiente <span class="badge">configuração</span></h3>
+            <p>
+              São valores configurados fora do código, como URLs, tokens e IDs. Exemplo:
+              <code>PLUGARME_BASE_URL</code>, <code>CLIENTE_ID</code> e <code>FILIAL_ID</code>.
+            </p>
+          </article>
+
+          <article class="term" data-term>
+            <h3>.env <span class="badge">arquivo local</span></h3>
+            <p>
+              Arquivo usado em desenvolvimento para definir variáveis de ambiente. Não deve conter segredos reais em
+              repositórios públicos.
+            </p>
+          </article>
+
+          <article class="term" data-term>
+            <h3>.env.example <span class="badge">documentação de config</span></h3>
+            <p>
+              Modelo de arquivo com as variáveis necessárias, normalmente sem segredos reais. Serve para orientar quem
+              vai rodar o projeto.
+            </p>
+          </article>
+
+          <article class="term" data-term>
+            <h3>README <span class="badge">guia do projeto</span></h3>
+            <p>
+              Documento principal com instruções de instalação, execução, testes, variáveis e decisões técnicas. É um dos
+              entregáveis do desafio.
+            </p>
+          </article>
+
+          <article class="term" data-term>
+            <h3>Client HTTP <span class="badge">camada de integração</span></h3>
+            <p>
+              Classe ou módulo responsável por chamar uma API externa. Exemplo: <code>PlugarmeClient</code> chama a API
+              da Plugar.me.
+            </p>
+          </article>
+
+          <article class="term" data-term>
+            <h3>Service <span class="badge">regra de negócio</span></h3>
+            <p>
+              Service é uma classe que concentra uma operação de negócio. No desafio, o serviço de sincronização decide
+              o que publicar, ignorar ou marcar como falha.
+            </p>
+          </article>
+
+          <article class="term" data-term>
+            <h3>Controller <span class="badge">entrada HTTP</span></h3>
+            <p>
+              Controller recebe uma requisição HTTP no AdonisJS, chama a regra de negócio e devolve uma resposta.
+            </p>
+          </article>
+
+          <article class="term" data-term>
+            <h3>Validator <span class="badge">validação</span></h3>
+            <p>
+              Validator confere se dados de entrada estão no formato esperado. Pode ser útil caso a rota aceite
+              parâmetros como <code>cliente_id</code> e <code>filial_id</code>.
+            </p>
+          </article>
+
+          <article class="term" data-term>
+            <h3>Tipagem <span class="badge">contratos no código</span></h3>
+            <p>
+              Tipagem descreve quais campos e formatos um valor possui. Em TypeScript, isso reduz erros e melhora leitura
+              do código.
+            </p>
+          </article>
+
+          <article class="term" data-term>
+            <h3>DTO <span class="badge">objeto de transporte</span></h3>
+            <p>
+              DTO é um objeto usado para transportar dados entre camadas. Pode ajudar a separar o formato recebido da API
+              do formato usado internamente.
+            </p>
+          </article>
+
+          <article class="term" data-term>
+            <h3>Contrato <span class="badge">formato combinado</span></h3>
+            <p>
+              Contrato é o acordo sobre entrada e saída de uma função, API ou componente. Exemplo: o contrato do PATCH da
+              Amazon exige <code>productType</code> e <code>patches</code>.
+            </p>
+          </article>
+
+          <article class="term" data-term>
+            <h3>Log <span class="badge">registro de evento</span></h3>
+            <p>
+              Log é uma mensagem registrada pela aplicação para explicar o que aconteceu. Bons logs ajudam a entender
+              erros e decisões, como produtos ignorados.
+            </p>
+          </article>
+
+          <article class="term" data-term>
+            <h3>Segredo <span class="badge orange">dado sensível</span></h3>
+            <p>
+              Segredo é qualquer dado que não deve ser exposto, como tokens, senhas e client secrets. Mesmo em teste,
+              evitar logar segredos mostra cuidado profissional.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section id="checklist" data-search-area>
+        <h2>Checklist De Domínio Antes De Implementar</h2>
+        <p>
+          Antes de começar a codar, você deve conseguir responder estas perguntas com segurança:
+        </p>
+        <ul class="checklist">
+          <li>Qual é a diferença entre Node.js, TypeScript e AdonisJS?</li>
+          <li>Qual rota ou comando vai disparar a sincronização?</li>
+          <li>De onde vêm produtos, preço, estoque e credenciais?</li>
+          <li>Por que <code>erp_id</code> vira SKU?</li>
+          <li>Como selecionar preço e estoque da filial correta?</li>
+          <li>Por que estoque <code>0</code> é válido?</li>
+          <li>Quando um produto deve ser ignorado?</li>
+          <li>Como renovar o token Amazon?</li>
+          <li>O que fazer ao receber <code>401</code>?</li>
+          <li>O que fazer ao receber <code>429</code>?</li>
+          <li>Como garantir que uma falha em um SKU não pare os demais?</li>
+          <li>Quais dados nunca devem aparecer em logs?</li>
+          <li>Como o README vai ensinar outra pessoa a rodar o projeto?</li>
+        </ul>
+        <p class="footer-note">
+          Documento local, autocontido e pronto para consulta offline. Use a busca no topo para localizar termos
+          rapidamente.
+        </p>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const input = document.querySelector("#searchInput");
+    const areas = Array.from(document.querySelectorAll("[data-search-area]"));
+    const terms = Array.from(document.querySelectorAll("[data-term]"));
+
+    function normalize(value) {
+      return value
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "");
+    }
+
+    function runSearch() {
+      const query = normalize(input.value.trim());
+      const searchable = terms.length ? terms : areas;
+
+      if (!query) {
+        areas.forEach((area) => area.classList.remove("hidden-by-search"));
+        terms.forEach((term) => term.classList.remove("hidden-by-search"));
+        return;
+      }
+
+      terms.forEach((term) => {
+        const match = normalize(term.textContent).includes(query);
+        term.classList.toggle("hidden-by-search", !match);
+      });
+
+      areas.forEach((area) => {
+        const hasDirectMatch = normalize(area.textContent).includes(query);
+        const visibleTerms = area.querySelectorAll("[data-term]:not(.hidden-by-search)").length;
+        area.classList.toggle("hidden-by-search", !hasDirectMatch && visibleTerms === 0);
+      });
+    }
+
+    input.addEventListener("input", runSearch);
+
+    document.querySelectorAll('a[href^="#"]').forEach((link) => {
+      link.addEventListener("click", () => {
+        if (input.value) {
+          input.value = "";
+          runSearch();
+        }
+      });
+    });
+  </script>
+</body>
+</html>

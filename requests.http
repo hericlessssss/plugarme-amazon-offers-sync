@@ -1,0 +1,40 @@
+### Produtos
+GET http://localhost:3333/plugarme/v1/produtos?cliente_id=1&filial_id=6
+Authorization: Bearer plugarme-test-token
+
+### Credenciais Amazon - access token expirado
+GET http://localhost:3333/plugarme/v1/integracoes/amazon/credenciais?cliente_id=1
+Authorization: Bearer plugarme-test-token
+
+### Refresh LWA
+POST http://localhost:3333/amazon/auth/o2/token
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=refresh_token&refresh_token=Atzr%7Cmock-refresh-token-plugarme&client_id=amzn1.application-oa2-client.mock-plugarme&client_secret=mock-client-secret
+
+### Atualização Amazon - use o token retornado acima
+PATCH http://localhost:3333/amazon/listings/2021-08-01/items/A1PLUGARMESELLERBR/PS5-CONTROLE?marketplaceIds=A2Q3Y263D00KWC
+x-amz-access-token: Atza|valid-refreshed-token-1
+Content-Type: application/json
+
+{
+  "productType": "PRODUCT",
+  "patches": [
+    {
+      "op": "replace",
+      "path": "/attributes/purchasable_offer",
+      "value": [{"marketplace_id":"A2Q3Y263D00KWC","currency":"BRL","our_price":[{"schedule":[{"value_with_tax":599}]}]}]
+    },
+    {
+      "op": "merge",
+      "path": "/attributes/fulfillment_availability",
+      "value": [{"fulfillment_channel_code":"DEFAULT","quantity":100}]
+    }
+  ]
+}
+
+### Estado reservado ao avaliador
+GET http://localhost:3333/admin/state
+
+### Reset
+POST http://localhost:3333/admin/reset
