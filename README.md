@@ -173,6 +173,35 @@ Cobertura atual:
 - Refresh apos `401`.
 - Retry simples para `429`.
 - Isolamento de falha por SKU.
+- Logs tecnicos do fluxo sem vazamento de segredos.
+- Teste funcional da rota `POST /sync/amazon/offers`.
+
+## Observabilidade e logs
+
+A sincronizacao registra logs estruturados para facilitar troubleshooting em ambiente local ou real. Os principais eventos logados sao:
+
+- inicio e fim da sincronizacao;
+- busca de credenciais Amazon;
+- busca de produtos Plugar.me;
+- avaliacao de expiracao do token;
+- inicio, sucesso e falha de refresh do token Amazon;
+- produto ignorado com motivo tecnico;
+- tentativa de publicacao por SKU;
+- sucesso de publicacao com `submissionId`;
+- rejeicao `401` com refresh e nova tentativa;
+- rate limit `429` com tentativa, limite de retry e backoff aplicado;
+- falha final por SKU com status HTTP, metodo, URL e corpo de erro sanitizado.
+
+Campos sensiveis sao mascarados antes de entrar nos logs:
+
+- `access_token`
+- `refresh_token`
+- `lwa_client_secret`
+- `client_secret`
+- `Authorization`
+- `x-amz-access-token`
+
+Essa protecao tambem e coberta por teste automatizado.
 
 ## Cenários manuais com a mock API
 
