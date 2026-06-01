@@ -22,3 +22,39 @@ export interface SkippedOffer {
 }
 
 export type OfferMappingResult = PublishableOffer | SkippedOffer
+
+export interface PublishedSyncItem {
+  sku: string
+  title: string
+  price: number
+  quantity: number
+  submissionId: string
+  status: string
+}
+
+export interface SkippedSyncItem {
+  sku: string | null
+  title: string
+  reason: SkipReason
+}
+
+export interface FailedSyncItem {
+  sku: string
+  title: string
+  statusCode?: number
+  reason: string
+}
+
+export interface SyncSummary {
+  total: number
+  published: number
+  skipped: number
+  failed: number
+}
+
+export interface SyncAmazonOffersResult {
+  summary: SyncSummary
+  published: PublishedSyncItem[]
+  skipped: SkippedSyncItem[]
+  failed: FailedSyncItem[]
+}
